@@ -1,6 +1,4 @@
-
-
-export default function ErrorAlert({errorType , errorMessage}){
+export default function ErrorAlert({ errorType, errorMessage }) {
     let alertIcon = '⚠️';
     let alertTitle = 'Something Went Wrong';
     let alertClassName = 'error-alert error-alert-generic';

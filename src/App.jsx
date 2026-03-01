@@ -23,7 +23,10 @@ export default function App() {
         const trimmedSymbol = debouncedSearchSymbol.trim();
 
         if (trimmedSymbol === '') {
-            setStockData(null);
+            setStockData((current) => {
+                if (current !== null) return null;
+                return current;
+            });
             setErrorInfo(null);
             setIsLoading(false);
             return;
@@ -35,30 +38,22 @@ export default function App() {
             const cachedResult = getFromCache(trimmedSymbol);
 
             if (cachedResult !== null) {
-                if (cancelledByNewSearch) {
-                    return;
-                }
+                if (cancelledByNewSearch) return;
                 setStockData(cachedResult);
                 setIsLoading(false);
                 return;
             }
 
             setIsLoading(true);
-            setStockData(null);
 
             try {
                 const freshData = await fetchStockQuote(trimmedSymbol);
-                if (cancelledByNewSearch) {
-                    console.log(`[Cancelled] Ignoring stale result for "${trimmedSymbol}"`);
-                    return;
-                }
+                if (cancelledByNewSearch) return;
                 addToCache(trimmedSymbol, freshData);
                 setStockData(freshData);
                 setErrorInfo(null);
             } catch (error) {
-                if (cancelledByNewSearch) {
-                    return;
-                }
+                if (cancelledByNewSearch) return;
                 const errorType = error.type || 'UNKNOWN_ERROR';
                 const errorMessage = error.message || 'An unexpected error occurred.';
                 setErrorInfo({ type: errorType, message: errorMessage });
@@ -78,7 +73,6 @@ export default function App() {
     const handleSearchInputChange = useCallback((newValue) => {
         setSearchInputText(newValue);
     }, []);
-
 
     return (
         <div className="app-wrapper">

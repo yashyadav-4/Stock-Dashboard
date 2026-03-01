@@ -1,4 +1,3 @@
-
 export default function StockCard({ stockData }) {
 
     const companyName = stockData.companyName;
@@ -28,13 +27,13 @@ export default function StockCard({ stockData }) {
             <div className="stock-details">
                 <div className="stock-detail-item">
                     <span className="stock-detail-label">Day High</span>
-                    <span className="stock-detail-value" style={{ color: 'var(--success)' }}>
+                    <span className="stock-detail-value" style={{ color: 'var(--color-success)' }}>
                         {currencyFormatting(dayHigh)}
                     </span>
                 </div>
                 <div className="stock-detail-item">
                     <span className="stock-detail-label">Day Low</span>
-                    <span className="stock-detail-value" style={{ color: 'var(--danger)' }}>
+                    <span className="stock-detail-value" style={{ color: 'var(--color-danger)' }}>
                         {currencyFormatting(dayLow)}
                     </span>
                 </div>

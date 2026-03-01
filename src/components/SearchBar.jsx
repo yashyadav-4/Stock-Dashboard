@@ -1,4 +1,3 @@
-
 export default function SearchBar({ searchInputValue, onSearchInputChange }) {
     function handleInputChange(e) {
         onSearchInputChange(e.target.value);
