@@ -1,59 +1,144 @@
-# 📈 The Stock Search Dashboard
+# Stock Search Dashboard
 
-Hey there! Welcome to the **Stock Search Dashboard**. If you're looking for a beautifully designed, fast, and simple way to check real-time U.S. stock prices, you're in the right place. 
-
-I built this project to show how we can combine sleek, modern UI design (think smooth animations and frosted glass effects) with real-time financial data. 
+A clean, responsive Stock Search Dashboard built with **React** and **Vite**, powered by the [Financial Modeling Prep](https://financialmodelingprep.com/) API.
 
 ---
 
-## ✨ Why You'll Love This
+## Features
 
-- **It's Fast:** We aggressively cache results. If you search the same stock twice, it loads instantly instead of re-fetching from the internet.
-- **It Looks Great:** A custom dark theme that’s easy on the eyes, built without relying on heavy CSS frameworks. Just pure, clean design.
-- **It's Bulletproof:** Whether your internet drops or you type a stock that doesn't exist, the app will politely tell you what went wrong.
+| # | Requirement | Status |
+|---|---|---|
+| 1 | Search page to enter a stock symbol (AAPL, TSLA, etc.) | ✅ |
+| 2 | Fetch stock data using API key | ✅ |
+| 3 | Display: Company Name, Current Price, Day High, Day Low, Last Updated | ✅ |
+| 4 | Frontend caching — same stock searched again does NOT call API | ✅ |
+| 5 | Loading state while fetching | ✅ |
+| 6 | Graceful API error handling | ✅ |
+
+## Bonus Features
+
+| Feature | Status |
+|---|---|
+| Debounced search input (800ms) | ✅ |
+| Dual-layer caching (in-memory Map + sessionStorage) | ✅ |
+| Stale request cancellation (only latest search result is used) | ✅ |
+| Animated falling stars background | ✅ |
+| Distinct error alerts per error type (404, 403, 429, network) | ✅ |
+| Popular stock shortcuts (AAPL, TSLA, GOOGL, AMZN) | ✅ |
 
 ---
 
-## 🛠️ Let's Get You Set Up!
+## Tech Stack
 
-Don't worry if you're new to React or Node.js. Just follow these steps, and you'll be up and running in less than 5 minutes.
+- **React 19** — Functional components with Hooks
+- **Vite 7** — Fast dev server and build tool
+- **Vanilla CSS** — Custom light-theme design system with CSS variables
+- **Inter Font** — Google Fonts for clean typography
 
-### Step 1: Open the Project
-First, make sure you are inside the `Stock_Dashboard` folder in your terminal or command prompt. If you aren't sure, run this:
+---
+
+## Project Structure
+
+```
+Stock_Dashboard/
+├── src/
+│   ├── components/
+│   │   ├── SearchBar.jsx        # Search input with placeholder
+│   │   ├── StockCard.jsx        # Displays the 5 stock data points
+│   │   ├── LoadingSpinner.jsx   # Animated loading spinner
+│   │   ├── ErrorAlert.jsx       # Context-aware error alerts
+│   │   └── FallingStars.jsx     # Animated background effect
+│   ├── hooks/
+│   │   ├── Debounce.js          # Custom debounce hook (800ms)
+│   │   └── StockCaching.js      # Dual-layer caching hook
+│   ├── services/
+│   │   └── StockMarket.js       # FMP API integration
+│   ├── App.jsx                  # Main application logic
+│   ├── App.css                  # Component styles
+│   ├── index.css                # Design tokens and global reset
+│   └── main.jsx                 # React entry point
+├── .env                         # API key (not committed)
+├── .gitignore
+├── index.html
+├── package.json
+└── vite.config.js
+```
+
+---
+
+## Setup Instructions
+
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **npm** (comes with Node.js)
+- A **Financial Modeling Prep API key** — [Get one here](https://financialmodelingprep.com/developer/docs/)
+
+### Step 1: Clone the repository
 ```bash
+git clone <repository-url>
 cd Stock_Dashboard
 ```
 
-### Step 2: Install the Necessary Packages
-The project needs a few tools to run (like React and Vite). We install them by running:
+### Step 2: Install dependencies
 ```bash
 npm install
 ```
-*(Grab a coffee, this might take a few seconds!)*
 
-### Step 3: Get Your Free API Key
-We use **Financial Modeling Prep** to get our stock data.
-1. Head over to [financialmodelingprep.com](https://site.financialmodelingprep.com/) and sign up for a free account.
-2. Once you log in, find your API key on the dashboard. Copy it.
-
-### Step 4: Tell the App Your Key
-The app needs your key to work, but we keep keys secret using a file called `.env`.
-1. Look inside the `Stock_Dashboard` folder for a file named `.env`.
-2. Open it, and replace the placeholder text with the key you just copied so it looks like this:
-```env
-VITE_API_KEY=your_copied_api_key_here
+### Step 3: Configure the API key
+Open the `.env` file in the project root and add your API key:
 ```
-*(Make sure there are no spaces around the equals sign!)*
+VITE_API_KEY=your_api_key_here
+```
 
-### Step 5: Start the App!
-You're ready to go. Run this final command:
+### Step 4: Start the development server
 ```bash
 npm run dev
 ```
-Your terminal will show you a local web address (usually `http://localhost:5173`). Ctrl+Click that link, or paste it into your browser. 
 
-🎉 **Congratulations! Try typing "AAPL" to see Apple's current stock price.**
+The app will open at **http://localhost:5173**.
 
 ---
 
-*Found a bug or have an idea to make it better? Feel free to poke around the code in the `src` folder. Happy coding!*
+## How It Works
+
+1. Type a stock ticker symbol (e.g., `AAPL`) in the search bar.
+2. The input is **debounced** — the app waits 800ms after you stop typing before searching.
+3. The app checks the **cache** first. If the stock was already searched, data loads instantly — no API call.
+4. If not cached, the app fetches from the FMP API, caches the result, and displays the stock card.
+5. Clicking a **popular search** pill (AAPL, TSLA, GOOGL, AMZN) auto-fills and searches that ticker.
+
+---
+
+## Caching Implementation
+
+The app uses a **dual-layer caching** strategy:
+
+- **Layer 1 — In-Memory Map**: Instant lookups using a `useRef(new Map())`. Fastest possible access.
+- **Layer 2 — sessionStorage**: Persists data across component re-renders within the same browser session.
+
+When a stock is searched:
+1. Check in-memory Map → if found, return immediately (zero API calls)
+2. Check sessionStorage → if found, restore to memory and return
+3. If neither has it → call the API, then store in both layers
+
+---
+
+## Error Handling
+
+| Error | Cause | Alert Style |
+|---|---|---|
+| Symbol Not Found | Invalid ticker symbol | 🔍 Yellow warning |
+| Invalid API Key | Missing or wrong key in `.env` | 🔑 Red alert |
+| Rate Limit | Exceeded 250 daily API calls | ⏱️ Orange alert |
+| Network Error | No internet connection | 🌐 Blue alert |
+| Unknown Error | Any other failure | ⚠️ Red alert |
+
+---
+
+## Build for Production
+
+```bash
+npm run build
+```
+
+Output is generated in the `dist/` folder, ready for deployment.
