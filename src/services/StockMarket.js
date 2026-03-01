@@ -1,6 +1,6 @@
 
 const API_KEY = import.meta.env.VITE_API_KEY;
-const URL = 'https://financialmodelingprep.com/api/v3';
+const BASE_URL = 'https://financialmodelingprep.com/stable';
 
 export async function fetchStockQuote(symbol) {
 
@@ -13,7 +13,7 @@ export async function fetchStockQuote(symbol) {
     }
 
     const s = symbol.trim().toUpperCase();
-    const req = URL + '/quote?symbol=' + s + '&apikey=' + API_KEY;
+    const req = BASE_URL + '/quote?symbol=' + s + '&apikey=' + API_KEY;
 
     let res;
     try {
@@ -78,7 +78,7 @@ export async function fetchStockQuote(symbol) {
 
     const needed = Data[0];
     const stockData = {
-        companyName: needed.companyName || 'unknow company name',
+        companyName: needed.name || 'Unknown Company',
         price: needed.price ?? 0,
         dayHigh: needed.dayHigh ?? 0,
         dayLow: needed.dayLow ?? 0,

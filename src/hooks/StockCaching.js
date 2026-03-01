@@ -17,7 +17,7 @@ export default function useStockCache() {
         const sessionStorageKey = cachingPrefix + s;
         const storedJsonString = sessionStorage.getItem(sessionStorageKey);
 
-        if (sessionStorageKey) {
+        if (storedJsonString) {
             try {
                 const data = JSON.parse(storedJsonString);
                 inMemoryCache.current.set(s, data);

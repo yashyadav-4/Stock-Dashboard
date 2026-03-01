@@ -6,6 +6,9 @@ import SearchBar from "./components/SearchBar";
 import StockCard from "./components/StockCard";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorAlert from "./components/ErrorAlert";
+import FallingStars from "./components/FallingStars";
+import './App.css';
+
 export default function App() {
 
     const [searchInputText, setSearchInputText] = useState('');
@@ -79,17 +82,16 @@ export default function App() {
 
     return (
         <div className="app-wrapper">
-
+            <FallingStars />
             <header className="app-header">
-                <div className="app-header-brand">
-                    <svg className="app-header-logo" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-                        <polyline points="16 7 22 7 22 13" />
-                    </svg>
-                    <h1 className="app-header-title">Stock Search Dashboard</h1>
+                <div className="app-header-brand-container">
+                    <h1 className="app-header-title">
+                        <span className="title-dark">Stock</span><span className="title-blue">Dashboard</span>
+                    </h1>
+                    <span className="app-header-author">by Yash</span>
                 </div>
                 <p className="app-header-subtitle">
-                    Real-time U.S. stock quotes powered by Financial Modeling Prep
+                    Real-time market insights, beautifully simple.
                 </p>
             </header>
 
@@ -116,20 +118,23 @@ export default function App() {
 
                 {!isLoading && !errorInfo && !stockData && (
                     <div className="app-empty-state">
-                        <div className="app-empty-state-icon">📈</div>
-                        <p className="app-empty-state-text">
-                            Type a U.S. stock ticker above to get started
-                        </p>
-                        <p className="app-empty-state-hint">
-                            Try AAPL, TSLA, MSFT, GOOGL, or AMZN
-                        </p>
+                        <div className="popular-searches-container">
+                            <div className="popular-pills">
+                                {['AAPL', 'TSLA', 'GOOGL', 'AMZN'].map((sym) => (
+                                    <button
+                                        key={sym}
+                                        className="popular-pill"
+                                        onClick={() => handleSearchInputChange(sym)}
+                                    >
+                                        {sym}
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="popular-searches-label">POPULAR SEARCHES</p>
+                        </div>
                     </div>
                 )}
             </main>
-
-            <footer className="app-footer">
-                <p>Data provided by Financial Modeling Prep · Results are cached per session</p>
-            </footer>
         </div>
     );
 }
