@@ -153,14 +153,24 @@
   transform: translateY(-2px);
 }
 
-.search-bar-hint {
+.search-bar-clear-btn {
   position: absolute;
-  right: 1.75rem;
-  font-size: 0.65rem;
-  font-weight: 700;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: 400;
   color: var(--text-muted);
-  letter-spacing: 0.06em;
-  pointer-events: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+  border-radius: 50%;
+  transition: color var(--ease-fast), background var(--ease-fast);
+}
+
+.search-bar-clear-btn:hover {
+  color: var(--text-heading);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 /* ==========================================================================
@@ -286,6 +296,13 @@
   color: var(--text-heading);
   line-height: 1;
   letter-spacing: -0.02em;
+}
+
+.stock-price-change {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: var(--space-xs);
+  letter-spacing: 0.01em;
 }
 
 .stock-details {

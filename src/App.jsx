@@ -13,14 +13,17 @@ export default function App() {
 
     const [searchInputText, setSearchInputText] = useState('');
     const debouncedSearchSymbol = useDebounce(searchInputText, 800);
+    const [instantSymbol, setInstantSymbol] = useState('');
     const [stockData, setStockData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorInfo, setErrorInfo] = useState(null);
     const { getFromCache, addToCache } = useStockCache();
 
+    const activeSymbol = instantSymbol || debouncedSearchSymbol;
+
     useEffect(() => {
         let cancelledByNewSearch = false;
-        const trimmedSymbol = debouncedSearchSymbol.trim();
+        const trimmedSymbol = activeSymbol.trim();
 
         if (trimmedSymbol === '') {
             setStockData((current) => {
@@ -68,10 +71,28 @@ export default function App() {
         return () => {
             cancelledByNewSearch = true;
         };
-    }, [debouncedSearchSymbol, getFromCache, addToCache]);
+    }, [activeSymbol, getFromCache, addToCache]);
+
+    useEffect(() => {
+        if (instantSymbol !== '') {
+            setInstantSymbol('');
+        }
+    }, [debouncedSearchSymbol]);
 
     const handleSearchInputChange = useCallback((newValue) => {
         setSearchInputText(newValue);
+    }, []);
+
+    const handleClearInput = useCallback(() => {
+        setSearchInputText('');
+        setInstantSymbol('');
+    }, []);
+
+    const handleInstantSearch = useCallback((value) => {
+        const trimmed = value.trim();
+        if (trimmed !== '') {
+            setInstantSymbol(trimmed);
+        }
     }, []);
 
     return (
@@ -93,6 +114,8 @@ export default function App() {
                 <SearchBar
                     searchInputValue={searchInputText}
                     onSearchInputChange={handleSearchInputChange}
+                    onClearInput={handleClearInput}
+                    onInstantSearch={handleInstantSearch}
                 />
             </section>
 

@@ -67,6 +67,8 @@ export async function fetchStockQuote(symbol) {
         price: needed.price ?? 0,
         dayHigh: needed.dayHigh ?? 0,
         dayLow: needed.dayLow ?? 0,
+        change: needed.change ?? 0,
+        changePercentage: needed.changePercentage ?? 0,
         lastUpdated: formatTimestamp(needed.timestamp),
         symbol: s,
     }
